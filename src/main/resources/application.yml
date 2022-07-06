@@ -7,8 +7,22 @@ spring:
   devtools:
     livereload:
       enabled: true
-
-
+  datasource:
+    hikari:
+      maximum-pool-size: 4
+    url: jdbc:postgresql://192.168.0.40:5432/test
+    username: rollin
+    password: 1234
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: "true"
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: "true"
 eureka:
   client:
     fetch-registry: true
