@@ -7,4 +7,5 @@ public class RequestPostDTO {
     private Integer userId;
     private String content;
     private String nickname;
+    private Integer giftId = null;
 }

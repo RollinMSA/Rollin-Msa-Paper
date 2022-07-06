@@ -35,6 +35,7 @@ public class PaperServiceimpl implements PaperService {
                 .nickname(requestPostDTO.getNickname())
                 .content(requestPostDTO.getContent())
                 .date(LocalDateTime.now())
+                .giftId(requestPostDTO.getGiftId())
                 .build();
         PaperEntity new_paper = paperRepository.save(paperEntity);
         return new_paper.getId() != null;
