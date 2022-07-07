@@ -10,7 +10,7 @@ spring:
   datasource:
     hikari:
       maximum-pool-size: 4
-    url: jdbc:postgresql://192.168.0.40:5432/test
+    url: jdbc:postgresql://localhost:5432/test
     username: rollin
     password: 1234
   jpa:
@@ -29,3 +29,56 @@ eureka:
     register-with-eureka: true
     service-url:
       defaultZone : ${EUREKA_DEFAULT_ZONE}
+#resilience4j
+resilience4j:
+  retry:
+    configs:
+      default:
+        max-attempts: 3
+        wait-duration: 5
+        ignore-exceptions:
+          - java.util.NoSuchElementException
+    instances:
+      hello:
+        base-config: default
+  circuitbreaker:
+    configs:
+      default:
+        sliding-window-size: 10 # 슬라이딩 윈도우 개수
+        permitted-number-of-calls-in-half-open-state: 5 # 회로가 half-open일때 요청의 최대 타임아웃
+        wait-duration-in-open-state: 10000 # 회로가 open 에서 half-open으로 전환되기 까지의 대기 시간
+        failure-rate-threshold: 50 # 실패 비율의 threshold
+        event-consumer-buffer-size: 10 # 이벤트 발생시 버퍼에 저장될 크기
+        register-health-indicator: true # actuator를 통한 상태 확인
+        minimumNumberOfCalls: 5 # 최소수행 call 개수
+    instances:
+      hello:
+        base-config: default
+      paperService:
+        sliding-window-size: 10 # 슬라이딩 윈도우 개수
+        permitted-number-of-calls-in-half-open-state: 5 # 회로가 half-open일때 요청의 최대 타임아웃
+        wait-duration-in-open-state: 10000 # 회로가 open 에서 half-open으로 전환되기 까지의 대기 시간
+        failure-rate-threshold: 50 # 실패 비율의 threshold
+        slow-call-duration-threshold: 3000
+        slow-call-rate-threshold: 30
+        event-consumer-buffer-size: 10 # 이벤트 발생시 버퍼에 저장될 크기
+        register-health-indicator: true # actuator를 통한 상태 확인
+        minimumNumberOfCalls: 5 # 최소수행 call 개수
+  timelimiter:
+    instances:
+      paperService:
+        timeout-duration: 2s
+#Actuator 설정
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    shutdown:
+      enabled: true
+    health: #actuator로 정보 확인
+      show-details: always
+  health: #actuator로 cb 상태 확인
+    circuitbreakers:
+      enabled: true

@@ -9,6 +9,9 @@ import java.util.List;
 public interface PaperService {
     List<PaperEntity> getAllPaper();
 
-    List<PaperEntity> getPaperByUserId(Integer id);
+    List<PaperEntity> getPaperByUserId(String id);
     Boolean postPaper(RequestPostDTO requestPostDTO);
+
+    //CircuitBreaker를 위한 지연 삽입
+    Boolean postDelayPaper(RequestPostDTO requestPostDTO);
 }

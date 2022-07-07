@@ -3,9 +3,8 @@ package com.example.rollin_paperservice.controller;
 import com.example.rollin_paperservice.model.PaperEntity;
 import com.example.rollin_paperservice.model.RequestPostDTO;
 import com.example.rollin_paperservice.service.PaperService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,18 +25,15 @@ public class PaperController {
     @GetMapping("/{userId}")
     public List<PaperEntity> getPaperByUserId(@PathVariable String userId) {
         System.out.println(userId);
-        return paperService.getPaperByUserId(Integer.valueOf(userId));
+
+        return paperService.getPaperByUserId(userId);
     }
     @PostMapping
     public Boolean postPaper(@RequestBody RequestPostDTO requestPostDTO){
         return paperService.postPaper(requestPostDTO);
     }
-//    @PostMapping("/addGift")
-//    public ResponseEntity<?> postGift(@RequestBody PaperEntity paperEntity){
-//        //log.info(paperDto.toString());
-//        HttpStatus httpStatus;
-//        httpStatus=paperService.insertGiftInPaperAndUpdateGiftCount(paperEntity)? HttpStatus.CREATED : HttpStatus.BAD_REQUEST;
-//
-//        return new ResponseEntity<>(httpStatus);
-//    }
+    @PostMapping("/delay")
+    public Boolean postDelayPaper(@RequestBody RequestPostDTO requestPostDTO) {
+        return paperService.postDelayPaper(requestPostDTO);
+    }
 }
